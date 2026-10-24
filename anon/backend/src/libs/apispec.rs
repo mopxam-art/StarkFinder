@@ -28,7 +28,10 @@ impl Modify for SecurityAddon {
         crate::routes::health::healthz,
         crate::routes::generate::generate_contract,
         crate::routes::generate::list_generated_contracts,
-        crate::routes::reviews::list_reviews
+        crate::routes::reviews::list_reviews,
+        crate::handlers::reports::post_report,
+        crate::handlers::reports::get_admin_reports,
+        crate::handlers::reports::resolve_admin_report
     ),
     components(
         schemas(
@@ -45,7 +48,15 @@ impl Modify for SecurityAddon {
             crate::routes::generate::GeneratedContractsListRes,
             // Reviews
             crate::routes::reviews::ReviewItem,
-            crate::routes::reviews::ReviewsListRes
+            crate::routes::reviews::ReviewsListRes,
+            // Reports / Moderation
+            crate::models::report::ReportReasonCode,
+            crate::models::report::ReportStatus,
+            crate::models::report::CreateReportRequest,
+            crate::models::report::CreateReportResponse,
+            crate::models::report::ReviewReport,
+            crate::models::report::ResolveReportRequest,
+            crate::models::report::AdminReportsResponse
         )
     ),
     modifiers(&SecurityAddon),
@@ -53,7 +64,8 @@ impl Modify for SecurityAddon {
         (name = "health", description = "Health check endpoints"),
         (name = "auth", description = "Authentication & registration endpoints"),
         (name = "contracts", description = "Generated contracts endpoints"),
-        (name = "reviews", description = "Reviews listing endpoints")
+        (name = "reviews", description = "Reviews listing endpoints"),
+        (name = "moderation", description = "User reports and admin moderation review queue")
     )
 )]
 pub struct ApiDoc;
