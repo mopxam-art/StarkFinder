@@ -28,7 +28,9 @@ impl Modify for SecurityAddon {
         crate::routes::health::healthz,
         crate::routes::generate::generate_contract,
         crate::routes::generate::list_generated_contracts,
-        crate::routes::reviews::list_reviews
+        crate::routes::reviews::list_reviews,
+        crate::handlers::salaries::submit_salary_report,
+        crate::handlers::salaries::get_company_salary_summary
     ),
     components(
         schemas(
@@ -45,7 +47,14 @@ impl Modify for SecurityAddon {
             crate::routes::generate::GeneratedContractsListRes,
             // Reviews
             crate::routes::reviews::ReviewItem,
-            crate::routes::reviews::ReviewsListRes
+            crate::routes::reviews::ReviewsListRes,
+            // Salaries
+            crate::models::salary::CurrencyCode,
+            crate::models::salary::CompensationType,
+            crate::models::salary::SubmitSalaryReq,
+            crate::models::salary::SalaryReport,
+            crate::models::salary::PercentileStats,
+            crate::models::salary::SalaryAggregate
         )
     ),
     modifiers(&SecurityAddon),
@@ -53,7 +62,8 @@ impl Modify for SecurityAddon {
         (name = "health", description = "Health check endpoints"),
         (name = "auth", description = "Authentication & registration endpoints"),
         (name = "contracts", description = "Generated contracts endpoints"),
-        (name = "reviews", description = "Reviews listing endpoints")
+        (name = "reviews", description = "Reviews listing endpoints"),
+        (name = "salaries", description = "Salary reports and percentiles aggregation endpoints")
     )
 )]
 pub struct ApiDoc;
