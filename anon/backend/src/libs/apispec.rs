@@ -28,7 +28,11 @@ impl Modify for SecurityAddon {
         crate::routes::health::healthz,
         crate::routes::generate::generate_contract,
         crate::routes::generate::list_generated_contracts,
-        crate::routes::reviews::list_reviews
+        crate::routes::reviews::list_reviews,
+        crate::handlers::appeals::create_appeal,
+        crate::handlers::appeals::get_appeal_by_id,
+        crate::handlers::appeals::list_admin_appeals,
+        crate::handlers::appeals::resolve_admin_appeal,
     ),
     components(
         schemas(
@@ -45,7 +49,14 @@ impl Modify for SecurityAddon {
             crate::routes::generate::GeneratedContractsListRes,
             // Reviews
             crate::routes::reviews::ReviewItem,
-            crate::routes::reviews::ReviewsListRes
+            crate::routes::reviews::ReviewsListRes,
+            // Appeals
+            crate::models::appeal::AppealActor,
+            crate::models::appeal::AppealStatus,
+            crate::models::appeal::Appeal,
+            crate::models::appeal::CreateAppealRequest,
+            crate::models::appeal::ResolveAppealRequest,
+            crate::models::appeal::AppealListResponse,
         )
     ),
     modifiers(&SecurityAddon),
@@ -53,7 +64,8 @@ impl Modify for SecurityAddon {
         (name = "health", description = "Health check endpoints"),
         (name = "auth", description = "Authentication & registration endpoints"),
         (name = "contracts", description = "Generated contracts endpoints"),
-        (name = "reviews", description = "Reviews listing endpoints")
+        (name = "reviews", description = "Reviews listing endpoints"),
+        (name = "appeals", description = "Moderation decision appeals endpoints")
     )
 )]
 pub struct ApiDoc;
