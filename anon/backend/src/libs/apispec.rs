@@ -28,7 +28,16 @@ impl Modify for SecurityAddon {
         crate::routes::health::healthz,
         crate::routes::generate::generate_contract,
         crate::routes::generate::list_generated_contracts,
-        crate::routes::reviews::list_reviews
+        crate::routes::reviews::list_reviews,
+        crate::handlers::drafts::create_draft,
+        crate::handlers::drafts::update_draft,
+        crate::handlers::drafts::delete_draft,
+        crate::handlers::drafts::publish_draft,
+        crate::handlers::drafts::edit_published_review,
+        crate::handlers::drafts::get_draft,
+        crate::handlers::drafts::list_my_drafts,
+        crate::handlers::drafts::get_published_review,
+        crate::handlers::drafts::get_review_audit_history
     ),
     components(
         schemas(
@@ -45,7 +54,19 @@ impl Modify for SecurityAddon {
             crate::routes::generate::GeneratedContractsListRes,
             // Reviews
             crate::routes::reviews::ReviewItem,
-            crate::routes::reviews::ReviewsListRes
+            crate::routes::reviews::ReviewsListRes,
+            // Drafts, Revisions & Audit
+            crate::models::draft::ReviewDraft,
+            crate::models::draft::ReviewAuditEntry,
+            crate::models::draft::PublishedReview,
+            crate::models::draft::CreateDraftDto,
+            crate::models::draft::UpdateDraftDto,
+            crate::models::draft::EditPublishedReviewDto,
+            crate::models::draft::DraftResponse,
+            crate::models::draft::DeleteDraftResponse,
+            crate::models::draft::PublishResponse,
+            crate::models::draft::EditPublishedReviewResponse,
+            crate::models::draft::AuditHistoryResponse
         )
     ),
     modifiers(&SecurityAddon),
@@ -53,7 +74,8 @@ impl Modify for SecurityAddon {
         (name = "health", description = "Health check endpoints"),
         (name = "auth", description = "Authentication & registration endpoints"),
         (name = "contracts", description = "Generated contracts endpoints"),
-        (name = "reviews", description = "Reviews listing endpoints")
+        (name = "reviews", description = "Reviews listing endpoints"),
+        (name = "drafts", description = "Review drafts and time-windowed revision endpoints")
     )
 )]
 pub struct ApiDoc;

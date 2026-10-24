@@ -14,6 +14,18 @@ pub mod middlewares {
     pub mod request_id;
 }
 
+pub mod handlers {
+    pub mod drafts;
+}
+
+pub mod models {
+    pub mod draft;
+}
+
+pub mod services {
+    pub mod draft_service;
+}
+
 pub mod routes {
     pub mod generate;
     pub mod health;
@@ -42,7 +54,14 @@ use crate::libs::db::AppState;
 pub fn create_app(state: AppState) -> Router {
     let cors = CorsLayer::new()
         .allow_origin(Any)
-        .allow_methods([Method::GET, Method::POST, Method::OPTIONS])
+        .allow_methods([
+            Method::GET,
+            Method::POST,
+            Method::PUT,
+            Method::DELETE,
+            Method::PATCH,
+            Method::OPTIONS,
+        ])
         .allow_headers([CONTENT_TYPE, AUTHORIZATION]);
 
     // Router
@@ -56,6 +75,28 @@ pub fn create_app(state: AppState) -> Router {
         )
         .route("/reviews", get(routes::reviews::list_reviews))
         .route("/health", get(routes::health::health))
+        .route(
+            "/posts/drafts",
+            post(handlers::drafts::create_draft).get(handlers::drafts::list_my_drafts),
+        )
+        .route(
+            "/posts/drafts/{id}",
+            get(handlers::drafts::get_draft)
+                .put(handlers::drafts::update_draft)
+                .delete(handlers::drafts::delete_draft),
+        )
+        .route(
+            "/posts/drafts/{id}/publish",
+            post(handlers::drafts::publish_draft),
+        )
+        .route(
+            "/posts/{id}",
+            get(handlers::drafts::get_published_review).patch(handlers::drafts::edit_published_review),
+        )
+        .route(
+            "/posts/{id}/audit",
+            get(handlers::drafts::get_review_audit_history),
+        )
         // Swagger UI at /docs and OpenAPI JSON at /api-docs/openapi.json
         .merge(SwaggerUi::new("/docs").url(
             "/api-docs/openapi.json",
