@@ -10,14 +10,22 @@ use utoipa::ToSchema;
 pub enum ApiError {
     BadRequest(&'static str),
     Unauthorized(&'static str),
+    Forbidden(&'static str),
     Conflict(&'static str),
     NotFound(&'static str),
+    Gone(&'static str),
     Internal(&'static str),
 }
 
 #[derive(Serialize, ToSchema)]
 pub struct ErrorBody {
     pub error: String,
+}
+
+#[derive(Serialize, ToSchema)]
+pub struct GoneErrorBody {
+    pub error: String,
+    pub code: u16,
 }
 
 impl IntoResponse for ApiError {
@@ -37,6 +45,13 @@ impl IntoResponse for ApiError {
                 }),
             )
                 .into_response(),
+            ApiError::Forbidden(msg) => (
+                StatusCode::FORBIDDEN,
+                Json(ErrorBody {
+                    error: msg.to_string(),
+                }),
+            )
+                .into_response(),
             ApiError::Conflict(msg) => (
                 StatusCode::CONFLICT,
                 Json(ErrorBody {
@@ -48,6 +63,14 @@ impl IntoResponse for ApiError {
                 StatusCode::NOT_FOUND,
                 Json(ErrorBody {
                     error: msg.to_string(),
+                }),
+            )
+                .into_response(),
+            ApiError::Gone(msg) => (
+                StatusCode::GONE,
+                Json(GoneErrorBody {
+                    error: msg.to_string(),
+                    code: 410,
                 }),
             )
                 .into_response(),
