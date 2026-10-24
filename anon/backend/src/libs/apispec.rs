@@ -28,7 +28,8 @@ impl Modify for SecurityAddon {
         crate::routes::health::healthz,
         crate::routes::generate::generate_contract,
         crate::routes::generate::list_generated_contracts,
-        crate::routes::reviews::list_reviews
+        crate::routes::reviews::list_reviews,
+        crate::handlers::analytics::get_owner_analytics,
     ),
     components(
         schemas(
@@ -45,7 +46,14 @@ impl Modify for SecurityAddon {
             crate::routes::generate::GeneratedContractsListRes,
             // Reviews
             crate::routes::reviews::ReviewItem,
-            crate::routes::reviews::ReviewsListRes
+            crate::routes::reviews::ReviewsListRes,
+            // Analytics
+            crate::models::analytics::AnalyticsWindow,
+            crate::models::analytics::VolumeTrendPoint,
+            crate::models::analytics::TopicPrevalence,
+            crate::models::analytics::SentimentDistribution,
+            crate::models::analytics::EngagementMetrics,
+            crate::models::analytics::OwnerAnalyticsResponse,
         )
     ),
     modifiers(&SecurityAddon),
@@ -53,7 +61,8 @@ impl Modify for SecurityAddon {
         (name = "health", description = "Health check endpoints"),
         (name = "auth", description = "Authentication & registration endpoints"),
         (name = "contracts", description = "Generated contracts endpoints"),
-        (name = "reviews", description = "Reviews listing endpoints")
+        (name = "reviews", description = "Reviews listing endpoints"),
+        (name = "analytics", description = "Owner analytics deep-dives endpoints")
     )
 )]
 pub struct ApiDoc;
