@@ -28,7 +28,10 @@ impl Modify for SecurityAddon {
         crate::routes::health::healthz,
         crate::routes::generate::generate_contract,
         crate::routes::generate::list_generated_contracts,
-        crate::routes::reviews::list_reviews
+        crate::routes::reviews::list_reviews,
+        crate::handlers::claims::submit_company_claim,
+        crate::handlers::claims::get_company_claim_status,
+        crate::handlers::claims::admin_decide_claim
     ),
     components(
         schemas(
@@ -45,7 +48,13 @@ impl Modify for SecurityAddon {
             crate::routes::generate::GeneratedContractsListRes,
             // Reviews
             crate::routes::reviews::ReviewItem,
-            crate::routes::reviews::ReviewsListRes
+            crate::routes::reviews::ReviewsListRes,
+            // Claims
+            crate::models::claim::ClaimStatus,
+            crate::models::claim::CompanyClaim,
+            crate::models::claim::SubmitClaimRequest,
+            crate::models::claim::AdminClaimDecisionRequest,
+            crate::models::claim::CompanyClaimStatusResponse
         )
     ),
     modifiers(&SecurityAddon),
@@ -53,7 +62,8 @@ impl Modify for SecurityAddon {
         (name = "health", description = "Health check endpoints"),
         (name = "auth", description = "Authentication & registration endpoints"),
         (name = "contracts", description = "Generated contracts endpoints"),
-        (name = "reviews", description = "Reviews listing endpoints")
+        (name = "reviews", description = "Reviews listing endpoints"),
+        (name = "claims", description = "Company ownership claims and owner linking")
     )
 )]
 pub struct ApiDoc;
