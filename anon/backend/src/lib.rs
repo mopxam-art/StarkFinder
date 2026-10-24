@@ -19,6 +19,7 @@ pub mod routes {
     pub mod health;
     pub mod register;
     pub mod reviews;
+    pub mod typeahead;
     pub mod user;
 }
 
@@ -55,6 +56,7 @@ pub fn create_app(state: AppState) -> Router {
             get(routes::generate::list_generated_contracts),
         )
         .route("/reviews", get(routes::reviews::list_reviews))
+        .route("/typeahead", get(routes::typeahead::typeahead))
         .route("/health", get(routes::health::health))
         // Swagger UI at /docs and OpenAPI JSON at /api-docs/openapi.json
         .merge(SwaggerUi::new("/docs").url(
