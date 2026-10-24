@@ -28,7 +28,10 @@ impl Modify for SecurityAddon {
         crate::routes::health::healthz,
         crate::routes::generate::generate_contract,
         crate::routes::generate::list_generated_contracts,
-        crate::routes::reviews::list_reviews
+        crate::routes::reviews::list_reviews,
+        crate::handlers::verify::start_verification,
+        crate::handlers::verify::submit_proof,
+        crate::handlers::verify::get_verification_status,
     ),
     components(
         schemas(
@@ -45,7 +48,14 @@ impl Modify for SecurityAddon {
             crate::routes::generate::GeneratedContractsListRes,
             // Reviews
             crate::routes::reviews::ReviewItem,
-            crate::routes::reviews::ReviewsListRes
+            crate::routes::reviews::ReviewsListRes,
+            // Verify
+            crate::models::verify::VerificationStatus,
+            crate::models::verify::StartVerificationRequest,
+            crate::models::verify::StartVerificationResponse,
+            crate::models::verify::SubmitProofRequest,
+            crate::models::verify::SubmitProofResponse,
+            crate::models::verify::VerificationStatusResponse,
         )
     ),
     modifiers(&SecurityAddon),
@@ -53,7 +63,8 @@ impl Modify for SecurityAddon {
         (name = "health", description = "Health check endpoints"),
         (name = "auth", description = "Authentication & registration endpoints"),
         (name = "contracts", description = "Generated contracts endpoints"),
-        (name = "reviews", description = "Reviews listing endpoints")
+        (name = "reviews", description = "Reviews listing endpoints"),
+        (name = "verify", description = "zkTLS employment verification endpoints")
     )
 )]
 pub struct ApiDoc;
