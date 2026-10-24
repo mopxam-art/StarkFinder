@@ -28,7 +28,11 @@ impl Modify for SecurityAddon {
         crate::routes::health::healthz,
         crate::routes::generate::generate_contract,
         crate::routes::generate::list_generated_contracts,
-        crate::routes::reviews::list_reviews
+        crate::routes::reviews::list_reviews,
+        crate::handlers::bookmarks::add_bookmark,
+        crate::handlers::bookmarks::remove_bookmark,
+        crate::handlers::bookmarks::list_my_bookmarks,
+        crate::handlers::bookmarks::get_bookmark_status
     ),
     components(
         schemas(
@@ -45,7 +49,11 @@ impl Modify for SecurityAddon {
             crate::routes::generate::GeneratedContractsListRes,
             // Reviews
             crate::routes::reviews::ReviewItem,
-            crate::routes::reviews::ReviewsListRes
+            crate::routes::reviews::ReviewsListRes,
+            // Bookmarks
+            crate::models::bookmark::Bookmark,
+            crate::models::bookmark::BookmarkResponse,
+            crate::models::bookmark::BookmarkStatusResponse
         )
     ),
     modifiers(&SecurityAddon),
@@ -53,7 +61,8 @@ impl Modify for SecurityAddon {
         (name = "health", description = "Health check endpoints"),
         (name = "auth", description = "Authentication & registration endpoints"),
         (name = "contracts", description = "Generated contracts endpoints"),
-        (name = "reviews", description = "Reviews listing endpoints")
+        (name = "reviews", description = "Reviews listing endpoints"),
+        (name = "bookmarks", description = "User bookmarks endpoints")
     )
 )]
 pub struct ApiDoc;
