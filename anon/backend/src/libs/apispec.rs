@@ -28,7 +28,10 @@ impl Modify for SecurityAddon {
         crate::routes::health::healthz,
         crate::routes::generate::generate_contract,
         crate::routes::generate::list_generated_contracts,
-        crate::routes::reviews::list_reviews
+        crate::routes::reviews::list_reviews,
+        crate::handlers::interviews::create_interview,
+        crate::handlers::interviews::get_interview_by_id,
+        crate::handlers::interviews::list_company_interviews,
     ),
     components(
         schemas(
@@ -45,7 +48,13 @@ impl Modify for SecurityAddon {
             crate::routes::generate::GeneratedContractsListRes,
             // Reviews
             crate::routes::reviews::ReviewItem,
-            crate::routes::reviews::ReviewsListRes
+            crate::routes::reviews::ReviewsListRes,
+            // Interviews
+            crate::models::interview::OverallExperience,
+            crate::models::interview::InterviewQuestion,
+            crate::models::interview::InterviewReview,
+            crate::models::interview::CreateInterviewRequest,
+            crate::models::interview::InterviewListResponse,
         )
     ),
     modifiers(&SecurityAddon),
@@ -53,7 +62,8 @@ impl Modify for SecurityAddon {
         (name = "health", description = "Health check endpoints"),
         (name = "auth", description = "Authentication & registration endpoints"),
         (name = "contracts", description = "Generated contracts endpoints"),
-        (name = "reviews", description = "Reviews listing endpoints")
+        (name = "reviews", description = "Reviews listing endpoints"),
+        (name = "interviews", description = "Structured interview reviews endpoints")
     )
 )]
 pub struct ApiDoc;
