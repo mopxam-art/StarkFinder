@@ -14,6 +14,18 @@ pub mod middlewares {
     pub mod request_id;
 }
 
+pub mod handlers {
+    pub mod comments;
+}
+
+pub mod models {
+    pub mod comment;
+}
+
+pub mod services {
+    pub mod comment_service;
+}
+
 pub mod routes {
     pub mod generate;
     pub mod health;
@@ -28,7 +40,7 @@ use axum::{
         Method,
         header::{AUTHORIZATION, CONTENT_TYPE},
     },
-    routing::{get, post},
+    routing::{delete, get, post},
 };
 use tower_http::{
     cors::{Any, CorsLayer},
@@ -42,7 +54,7 @@ use crate::libs::db::AppState;
 pub fn create_app(state: AppState) -> Router {
     let cors = CorsLayer::new()
         .allow_origin(Any)
-        .allow_methods([Method::GET, Method::POST, Method::OPTIONS])
+        .allow_methods([Method::GET, Method::POST, Method::DELETE, Method::OPTIONS])
         .allow_headers([CONTENT_TYPE, AUTHORIZATION]);
 
     // Router
@@ -56,6 +68,14 @@ pub fn create_app(state: AppState) -> Router {
         )
         .route("/reviews", get(routes::reviews::list_reviews))
         .route("/health", get(routes::health::health))
+        .route(
+            "/posts/{id}/comments",
+            post(handlers::comments::create_comment).get(handlers::comments::list_comments),
+        )
+        .route(
+            "/comments/{id}",
+            delete(handlers::comments::delete_comment),
+        )
         // Swagger UI at /docs and OpenAPI JSON at /api-docs/openapi.json
         .merge(SwaggerUi::new("/docs").url(
             "/api-docs/openapi.json",
