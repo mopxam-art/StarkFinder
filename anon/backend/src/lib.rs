@@ -14,6 +14,18 @@ pub mod middlewares {
     pub mod request_id;
 }
 
+pub mod handlers {
+    pub mod stats;
+}
+
+pub mod models {
+    pub mod company_stats;
+}
+
+pub mod services {
+    pub mod stats_service;
+}
+
 pub mod routes {
     pub mod generate;
     pub mod health;
@@ -56,6 +68,18 @@ pub fn create_app(state: AppState) -> Router {
         )
         .route("/reviews", get(routes::reviews::list_reviews))
         .route("/health", get(routes::health::health))
+        .route(
+            "/companies/{slug}/stats",
+            get(handlers::stats::get_company_stats),
+        )
+        .route(
+            "/companies/{slug}/invalidate-cache",
+            post(handlers::stats::invalidate_company_cache),
+        )
+        .route(
+            "/metrics/stats-cache",
+            get(handlers::stats::get_stats_cache_metrics),
+        )
         // Swagger UI at /docs and OpenAPI JSON at /api-docs/openapi.json
         .merge(SwaggerUi::new("/docs").url(
             "/api-docs/openapi.json",
