@@ -28,7 +28,17 @@ impl Modify for SecurityAddon {
         crate::routes::health::healthz,
         crate::routes::generate::generate_contract,
         crate::routes::generate::list_generated_contracts,
-        crate::routes::reviews::list_reviews
+        crate::routes::reviews::list_reviews,
+        crate::handlers::notifications::follow_company,
+        crate::handlers::notifications::unfollow_company,
+        crate::handlers::notifications::get_company_follow_status,
+        crate::handlers::notifications::follow_tag,
+        crate::handlers::notifications::unfollow_tag,
+        crate::handlers::notifications::get_tag_follow_status,
+        crate::handlers::notifications::get_my_notifications,
+        crate::handlers::notifications::mark_notification_as_read,
+        crate::handlers::notifications::mark_all_notifications_as_read,
+        crate::handlers::notifications::dispatch_notifications
     ),
     components(
         schemas(
@@ -45,7 +55,22 @@ impl Modify for SecurityAddon {
             crate::routes::generate::GeneratedContractsListRes,
             // Reviews
             crate::routes::reviews::ReviewItem,
-            crate::routes::reviews::ReviewsListRes
+            crate::routes::reviews::ReviewsListRes,
+            // Notifications & Follows
+            crate::models::notification::FollowKind,
+            crate::models::notification::Follow,
+            crate::models::notification::NotificationType,
+            crate::models::notification::Notification,
+            crate::models::notification::NotificationsQuery,
+            crate::models::notification::NotificationsListRes,
+            crate::models::notification::FollowResponse,
+            crate::models::notification::UnfollowResponse,
+            crate::models::notification::FollowStatusResponse,
+            crate::models::notification::ListFollowersResponse,
+            crate::models::notification::MarkReadResponse,
+            crate::models::notification::MarkAllReadResponse,
+            crate::models::notification::DispatchNotificationDto,
+            crate::models::notification::DispatchResponse
         )
     ),
     modifiers(&SecurityAddon),
@@ -53,7 +78,8 @@ impl Modify for SecurityAddon {
         (name = "health", description = "Health check endpoints"),
         (name = "auth", description = "Authentication & registration endpoints"),
         (name = "contracts", description = "Generated contracts endpoints"),
-        (name = "reviews", description = "Reviews listing endpoints")
+        (name = "reviews", description = "Reviews listing endpoints"),
+        (name = "notifications", description = "Company/tag follows and in-app alerts")
     )
 )]
 pub struct ApiDoc;

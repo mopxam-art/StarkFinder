@@ -14,6 +14,18 @@ pub mod middlewares {
     pub mod request_id;
 }
 
+pub mod handlers {
+    pub mod notifications;
+}
+
+pub mod models {
+    pub mod notification;
+}
+
+pub mod services {
+    pub mod notification_service;
+}
+
 pub mod routes {
     pub mod generate;
     pub mod health;
@@ -28,7 +40,7 @@ use axum::{
         Method,
         header::{AUTHORIZATION, CONTENT_TYPE},
     },
-    routing::{get, post},
+    routing::{get, patch, post},
 };
 use tower_http::{
     cors::{Any, CorsLayer},
@@ -42,7 +54,13 @@ use crate::libs::db::AppState;
 pub fn create_app(state: AppState) -> Router {
     let cors = CorsLayer::new()
         .allow_origin(Any)
-        .allow_methods([Method::GET, Method::POST, Method::OPTIONS])
+        .allow_methods([
+            Method::GET,
+            Method::POST,
+            Method::DELETE,
+            Method::PATCH,
+            Method::OPTIONS,
+        ])
         .allow_headers([CONTENT_TYPE, AUTHORIZATION]);
 
     // Router
@@ -56,6 +74,35 @@ pub fn create_app(state: AppState) -> Router {
         )
         .route("/reviews", get(routes::reviews::list_reviews))
         .route("/health", get(routes::health::health))
+        .route(
+            "/companies/{slug}/follow",
+            post(handlers::notifications::follow_company)
+                .delete(handlers::notifications::unfollow_company)
+                .get(handlers::notifications::get_company_follow_status),
+        )
+        .route(
+            "/tags/{name}/follow",
+            post(handlers::notifications::follow_tag)
+                .delete(handlers::notifications::unfollow_tag)
+                .get(handlers::notifications::get_tag_follow_status),
+        )
+        .route(
+            "/me/notifications",
+            get(handlers::notifications::get_my_notifications)
+                .patch(handlers::notifications::mark_all_notifications_as_read),
+        )
+        .route(
+            "/me/notifications/read-all",
+            post(handlers::notifications::mark_all_notifications_as_read),
+        )
+        .route(
+            "/me/notifications/{id}",
+            patch(handlers::notifications::mark_notification_as_read),
+        )
+        .route(
+            "/notifications/dispatch",
+            post(handlers::notifications::dispatch_notifications),
+        )
         // Swagger UI at /docs and OpenAPI JSON at /api-docs/openapi.json
         .merge(SwaggerUi::new("/docs").url(
             "/api-docs/openapi.json",
