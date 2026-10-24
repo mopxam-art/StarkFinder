@@ -28,7 +28,10 @@ impl Modify for SecurityAddon {
         crate::routes::health::healthz,
         crate::routes::generate::generate_contract,
         crate::routes::generate::list_generated_contracts,
-        crate::routes::reviews::list_reviews
+        crate::routes::reviews::list_reviews,
+        crate::handlers::reactions::add_or_update_reaction,
+        crate::handlers::reactions::remove_reaction,
+        crate::handlers::reactions::get_reaction_summary
     ),
     components(
         schemas(
@@ -45,7 +48,13 @@ impl Modify for SecurityAddon {
             crate::routes::generate::GeneratedContractsListRes,
             // Reviews
             crate::routes::reviews::ReviewItem,
-            crate::routes::reviews::ReviewsListRes
+            crate::routes::reviews::ReviewsListRes,
+            // Reactions
+            crate::models::reaction::ReactionType,
+            crate::models::reaction::ReactionTarget,
+            crate::models::reaction::ReactionSummary,
+            crate::models::reaction::CreateReactionDto,
+            crate::models::reaction::ReactionResponse
         )
     ),
     modifiers(&SecurityAddon),
@@ -53,7 +62,8 @@ impl Modify for SecurityAddon {
         (name = "health", description = "Health check endpoints"),
         (name = "auth", description = "Authentication & registration endpoints"),
         (name = "contracts", description = "Generated contracts endpoints"),
-        (name = "reviews", description = "Reviews listing endpoints")
+        (name = "reviews", description = "Reviews listing endpoints"),
+        (name = "reactions", description = "Reactions endpoints (Upvote, Insightful, Thanks)")
     )
 )]
 pub struct ApiDoc;

@@ -10,8 +10,10 @@ use utoipa::ToSchema;
 pub enum ApiError {
     BadRequest(&'static str),
     Unauthorized(&'static str),
+    Forbidden(&'static str),
     Conflict(&'static str),
     NotFound(&'static str),
+    TooManyRequests(&'static str),
     Internal(&'static str),
 }
 
@@ -37,6 +39,13 @@ impl IntoResponse for ApiError {
                 }),
             )
                 .into_response(),
+            ApiError::Forbidden(msg) => (
+                StatusCode::FORBIDDEN,
+                Json(ErrorBody {
+                    error: msg.to_string(),
+                }),
+            )
+                .into_response(),
             ApiError::Conflict(msg) => (
                 StatusCode::CONFLICT,
                 Json(ErrorBody {
@@ -46,6 +55,13 @@ impl IntoResponse for ApiError {
                 .into_response(),
             ApiError::NotFound(msg) => (
                 StatusCode::NOT_FOUND,
+                Json(ErrorBody {
+                    error: msg.to_string(),
+                }),
+            )
+                .into_response(),
+            ApiError::TooManyRequests(msg) => (
+                StatusCode::TOO_MANY_REQUESTS,
                 Json(ErrorBody {
                     error: msg.to_string(),
                 }),
