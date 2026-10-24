@@ -22,6 +22,10 @@ pub mod routes {
     pub mod user;
 }
 
+pub mod handlers;
+pub mod models;
+pub mod services;
+
 use axum::{
     Router,
     http::{
@@ -56,6 +60,11 @@ pub fn create_app(state: AppState) -> Router {
         )
         .route("/reviews", get(routes::reviews::list_reviews))
         .route("/health", get(routes::health::health))
+        .route("/posts/{id}", get(handlers::posts::get_post_by_id))
+        .route(
+            "/companies/{slug}/posts",
+            get(handlers::posts::list_company_posts),
+        )
         // Swagger UI at /docs and OpenAPI JSON at /api-docs/openapi.json
         .merge(SwaggerUi::new("/docs").url(
             "/api-docs/openapi.json",
