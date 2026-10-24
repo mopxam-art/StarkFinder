@@ -28,7 +28,10 @@ impl Modify for SecurityAddon {
         crate::routes::health::healthz,
         crate::routes::generate::generate_contract,
         crate::routes::generate::list_generated_contracts,
-        crate::routes::reviews::list_reviews
+        crate::routes::reviews::list_reviews,
+        crate::handlers::company_responses::post_or_update_response,
+        crate::handlers::company_responses::get_response,
+        crate::handlers::company_responses::get_response_audit
     ),
     components(
         schemas(
@@ -45,7 +48,13 @@ impl Modify for SecurityAddon {
             crate::routes::generate::GeneratedContractsListRes,
             // Reviews
             crate::routes::reviews::ReviewItem,
-            crate::routes::reviews::ReviewsListRes
+            crate::routes::reviews::ReviewsListRes,
+            // Company Responses
+            crate::models::company_response::CompanyResponse,
+            crate::models::company_response::CompanyResponseAudit,
+            crate::models::company_response::CreateOrUpdateResponseDto,
+            crate::models::company_response::CompanyResponseRes,
+            crate::models::company_response::CompanyResponseAuditRes
         )
     ),
     modifiers(&SecurityAddon),
@@ -53,7 +62,8 @@ impl Modify for SecurityAddon {
         (name = "health", description = "Health check endpoints"),
         (name = "auth", description = "Authentication & registration endpoints"),
         (name = "contracts", description = "Generated contracts endpoints"),
-        (name = "reviews", description = "Reviews listing endpoints")
+        (name = "reviews", description = "Reviews listing endpoints"),
+        (name = "company_responses", description = "Official company employer review response endpoints")
     )
 )]
 pub struct ApiDoc;
