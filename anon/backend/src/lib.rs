@@ -1,3 +1,4 @@
+pub mod handlers;
 pub mod libs {
     pub mod apispec;
     pub mod config;
@@ -14,6 +15,8 @@ pub mod middlewares {
     pub mod request_id;
 }
 
+pub mod models;
+
 pub mod routes {
     pub mod generate;
     pub mod health;
@@ -21,6 +24,8 @@ pub mod routes {
     pub mod reviews;
     pub mod user;
 }
+
+pub mod services;
 
 use axum::{
     Router,
@@ -42,7 +47,7 @@ use crate::libs::db::AppState;
 pub fn create_app(state: AppState) -> Router {
     let cors = CorsLayer::new()
         .allow_origin(Any)
-        .allow_methods([Method::GET, Method::POST, Method::OPTIONS])
+        .allow_methods([Method::GET, Method::POST, Method::PUT, Method::OPTIONS])
         .allow_headers([CONTENT_TYPE, AUTHORIZATION]);
 
     // Router
@@ -56,6 +61,14 @@ pub fn create_app(state: AppState) -> Router {
         )
         .route("/reviews", get(routes::reviews::list_reviews))
         .route("/health", get(routes::health::health))
+        .route(
+            "/companies",
+            post(handlers::companies::create_company).get(handlers::companies::list_companies),
+        )
+        .route(
+            "/companies/{slug}",
+            get(handlers::companies::get_company).put(handlers::companies::update_company),
+        )
         // Swagger UI at /docs and OpenAPI JSON at /api-docs/openapi.json
         .merge(SwaggerUi::new("/docs").url(
             "/api-docs/openapi.json",
