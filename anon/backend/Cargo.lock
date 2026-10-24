@@ -272,10 +272,12 @@ dependencies = [
  "base64 0.22.1",
  "chrono",
  "dotenvy",
+ "hex",
  "jsonwebtoken",
  "rand 0.8.5",
  "serde",
  "serde_json",
+ "sha2",
  "sqlx",
  "sqlx-cli",
  "starknet",
@@ -287,6 +289,7 @@ dependencies = [
  "tracing-subscriber",
  "utoipa",
  "utoipa-swagger-ui",
+ "uuid 1.18.0",
 ]
 
 [[package]]
@@ -4089,6 +4092,7 @@ checksum = "f33196643e165781c20a5ead5582283a7dacbb87855d867fbc2df3f81eddc1be"
 dependencies = [
  "getrandom 0.3.3",
  "js-sys",
+ "serde",
  "wasm-bindgen",
 ]
 

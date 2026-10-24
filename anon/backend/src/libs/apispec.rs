@@ -28,7 +28,12 @@ impl Modify for SecurityAddon {
         crate::routes::health::healthz,
         crate::routes::generate::generate_contract,
         crate::routes::generate::list_generated_contracts,
-        crate::routes::reviews::list_reviews
+        crate::routes::reviews::list_reviews,
+        // Session & Auth
+        crate::routes::session::logout,
+        crate::routes::session::refresh,
+        crate::routes::session::list_sessions,
+        crate::routes::session::revoke_session
     ),
     components(
         schemas(
@@ -45,7 +50,14 @@ impl Modify for SecurityAddon {
             crate::routes::generate::GeneratedContractsListRes,
             // Reviews
             crate::routes::reviews::ReviewItem,
-            crate::routes::reviews::ReviewsListRes
+            crate::routes::reviews::ReviewsListRes,
+            // Sessions & Auth
+            crate::routes::session::LogoutReq,
+            crate::routes::session::LogoutRes,
+            crate::routes::session::RefreshReq,
+            crate::routes::session::RefreshRes,
+            crate::routes::session::SessionItem,
+            crate::routes::session::RevokeSessionRes
         )
     ),
     modifiers(&SecurityAddon),

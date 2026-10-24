@@ -19,6 +19,7 @@ pub mod routes {
     pub mod health;
     pub mod register;
     pub mod reviews;
+    pub mod session;
     pub mod user;
 }
 
@@ -28,7 +29,7 @@ use axum::{
         Method,
         header::{AUTHORIZATION, CONTENT_TYPE},
     },
-    routing::{get, post},
+    routing::{delete, get, post},
 };
 use tower_http::{
     cors::{Any, CorsLayer},
@@ -42,7 +43,7 @@ use crate::libs::db::AppState;
 pub fn create_app(state: AppState) -> Router {
     let cors = CorsLayer::new()
         .allow_origin(Any)
-        .allow_methods([Method::GET, Method::POST, Method::OPTIONS])
+        .allow_methods([Method::GET, Method::POST, Method::DELETE, Method::OPTIONS])
         .allow_headers([CONTENT_TYPE, AUTHORIZATION]);
 
     // Router
@@ -56,6 +57,13 @@ pub fn create_app(state: AppState) -> Router {
         )
         .route("/reviews", get(routes::reviews::list_reviews))
         .route("/health", get(routes::health::health))
+        .route("/auth/logout", post(routes::session::logout))
+        .route("/auth/refresh", post(routes::session::refresh))
+        .route("/me/sessions", get(routes::session::list_sessions))
+        .route(
+            "/me/sessions/{session_id}",
+            delete(routes::session::revoke_session),
+        )
         // Swagger UI at /docs and OpenAPI JSON at /api-docs/openapi.json
         .merge(SwaggerUi::new("/docs").url(
             "/api-docs/openapi.json",
